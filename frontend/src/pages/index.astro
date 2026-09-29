@@ -5,6 +5,7 @@ import WelcomeCarousel from '../components/WelcomeCarousel.astro';
 import GatheringsCard from '../components/GatheringsCard.astro';
 import PastorsCard from '../components/PastorsCard.astro';
 import SmallGroupsCard from '../components/SmallGroupsCard.astro';
+import AmigotezCard from '../components/AmigotezCard.astro';
 import FeedCard from '../components/FeedCard.astro';
 import BottomDock from '../components/BottomDock.astro';
 import { getHomeContent } from '../services/daily-verse.js';
@@ -30,6 +31,7 @@ const homeContent = getHomeContent();
       <GatheringsCard />
       <PastorsCard />
       <SmallGroupsCard />
+      <AmigotezCard />
       <section class="feed-list" id="contenido" aria-label="Tarjetas de contenido">
         {Array.from({ length: 5 }, (_, index) => <FeedCard index={index + 1} />)}
       </section>

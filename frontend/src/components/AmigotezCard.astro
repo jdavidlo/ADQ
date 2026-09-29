@@ -1,0 +1,157 @@
+---
+import { getAmigotez } from '../services/amigotez.js';
+const amigotez = getAmigotez();
+---
+
+<article class="amigotez-card" aria-labelledby="amigotez-card-title">
+  <div class="amigotez-card-main">
+    <div class="amigotez-logo-placeholder" aria-hidden="true"></div>
+    <div class="amigotez-card-copy">
+      <p class="amigotez-eyebrow">Niñez y comunidad</p>
+      <h2 id="amigotez-card-title">{amigotez.name}</h2>
+      <p>{amigotez.cardSummary}</p>
+    </div>
+  </div>
+  <button class="amigotez-more-button" type="button" aria-haspopup="dialog" aria-controls="amigotez-sheet" data-amigotez-open>
+    <span>Ver más</span>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+  </button>
+</article>
+
+<div class="amigotez-sheet-layer" data-amigotez-sheet-layer hidden>
+  <button class="amigotez-sheet-backdrop" type="button" tabindex="-1" aria-label="Cerrar información de Amigo Tez" data-amigotez-sheet-backdrop></button>
+  <section
+    id="amigotez-sheet"
+    class="amigotez-sheet"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="amigotez-sheet-title"
+    tabindex="-1"
+    data-state="closed"
+    data-amigotez-sheet
+  >
+    <button class="amigotez-sheet-handle" type="button" aria-label="Expandir información de Amigo Tez" data-amigotez-sheet-handle>
+      <span aria-hidden="true"></span>
+    </button>
+    <div class="amigotez-sheet-content" data-amigotez-sheet-content>
+      <div class="amigotez-cover">
+        <div class="amigotez-cover-placeholder" aria-hidden="true"></div>
+        <div class="amigotez-cover-caption">
+          <h2 id="amigotez-sheet-title">{amigotez.name}</h2>
+        </div>
+      </div>
+      <div class="amigotez-sheet-body">
+        <p class="amigotez-introduction">{amigotez.introduction}</p>
+        <section class="amigotez-detail-section" aria-labelledby="amigotez-visit-title">
+          <h3 id="amigotez-visit-title">{amigotez.visitTitle}</h3>
+          <p>{amigotez.visitStory}</p>
+          <p>{amigotez.gratitude}</p>
+        </section>
+        <section class="amigotez-detail-section" aria-labelledby="amigotez-donation-title">
+          <h3 id="amigotez-donation-title">{amigotez.donationTitle}</h3>
+          <ul class="amigotez-donation-list">
+            {amigotez.inKindDonations.map((item) => <li>{item}</li>)}
+          </ul>
+          <p>{amigotez.donationDelivery}</p>
+        </section>
+        <div class="amigotez-join-action">
+          {amigotez.joinUrl ? (
+            <a class="amigotez-join-button" href={amigotez.joinUrl} target="_blank" rel="noopener noreferrer">Únete al equipo</a>
+          ) : (
+            <button class="amigotez-join-button" type="button" disabled>Únete al equipo</button>
+          )}
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  import { getPastorSheetState } from '../scripts/pastor-sheet.js';
+
+  const layer = document.querySelector('[data-amigotez-sheet-layer]');
+  const sheet = document.querySelector('[data-amigotez-sheet]');
+  const handle = document.querySelector('[data-amigotez-sheet-handle]');
+  const openButton = document.querySelector('[data-amigotez-open]');
+  const backdrop = document.querySelector('[data-amigotez-sheet-backdrop]');
+  const pageContent = [
+    document.querySelector('[data-site-header]'),
+    ...document.querySelectorAll('.home-main > :not([data-amigotez-sheet-layer])'),
+    document.querySelector('[data-bottom-dock]'),
+  ].filter(Boolean);
+  const previousInertStates = pageContent.map((element) => element.inert);
+  let state = 'closed';
+  let dragStartY = null;
+  let dragged = false;
+
+  const renderState = (nextState) => {
+    state = nextState;
+    sheet.dataset.state = state;
+    handle.setAttribute(
+      'aria-label',
+      state === 'full' ? 'Bajar información de Amigo Tez' : 'Expandir información de Amigo Tez',
+    );
+  };
+
+  const closeSheet = () => {
+    if (state === 'closed') return;
+    renderState(getPastorSheetState(state, 'close'));
+    layer.hidden = true;
+    document.body.classList.remove('amigotez-sheet-open');
+    pageContent.forEach((element, index) => { element.inert = previousInertStates[index]; });
+    openButton?.focus();
+  };
+
+  openButton?.addEventListener('click', () => {
+    renderState(getPastorSheetState(state, 'open'));
+    layer.hidden = false;
+    document.body.classList.add('amigotez-sheet-open');
+    pageContent.forEach((element) => { element.inert = true; });
+    window.requestAnimationFrame(() => handle.focus());
+  });
+
+  backdrop?.addEventListener('click', closeSheet);
+  handle?.addEventListener('click', () => {
+    if (dragged) {
+      dragged = false;
+      return;
+    }
+    renderState(getPastorSheetState(state, state === 'half' ? 'expand' : 'collapse'));
+  });
+  handle?.addEventListener('pointerdown', (event) => {
+    dragStartY = event.clientY;
+    dragged = false;
+    handle.setPointerCapture(event.pointerId);
+  });
+  handle?.addEventListener('pointerup', (event) => {
+    if (dragStartY === null) return;
+    const delta = event.clientY - dragStartY;
+    dragStartY = null;
+    if (Math.abs(delta) < 45) return;
+    dragged = true;
+    if (delta < 0) renderState(getPastorSheetState(state, 'expand'));
+    else if (state === 'full') renderState(getPastorSheetState(state, 'collapse'));
+    else closeSheet();
+  });
+  handle?.addEventListener('pointercancel', () => { dragStartY = null; });
+
+  document.addEventListener('keydown', (event) => {
+    if (state === 'closed') return;
+    if (event.key === 'Escape') {
+      closeSheet();
+      return;
+    }
+    if (event.key === 'Tab') {
+      const focusable = [...sheet.querySelectorAll('button:not([disabled]), a[href], [tabindex="0"]')];
+      const first = focusable[0];
+      const last = focusable.at(-1);
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last?.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first?.focus();
+      }
+    }
+  });
+</script>

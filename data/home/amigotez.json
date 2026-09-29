@@ -1,0 +1,12 @@
+{
+  "name": "Amigo Tez",
+  "cardSummary": "Un grupo de familias que sirve a la niñez queretana con eventos para niñas y niños de bajos recursos y en situación de alto riesgo.",
+  "introduction": "Somos familias preocupadas por la niñez queretana. Organizamos actividades para compartir tiempo, alegría y acompañamiento con niñas y niños.",
+  "visitTitle": "Una visita llena de alegría",
+  "visitStory": "Este fin de semana visitamos a 25 niñas de una casa hogar. Compartimos nuestro tiempo, llevamos sonrisas y recordamos que los pequeños actos de amor pueden hacer una gran diferencia.",
+  "gratitude": "Damos gracias a Dios y a cada persona que tuvo un corazón dispuesto a servir. Gracias a quienes hacen posibles estas visitas con su tiempo, sus donativos y su servicio.",
+  "donationTitle": "Donativos en especie",
+  "inKindDonations": ["Ropa", "Juguetes"],
+  "donationDelivery": "Los donativos se entregan presencialmente en la iglesia.",
+  "joinUrl": null
+}
