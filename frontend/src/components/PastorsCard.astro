@@ -1,0 +1,139 @@
+---
+import { getPastors } from '../services/pastors.js';
+const pastors = getPastors();
+---
+
+<article class="pastors-feature-card" aria-labelledby="pastors-card-title">
+  <div class="pastors-feature-copy">
+    <p class="pastors-eyebrow">Nuestros pastores</p>
+    <h2 id="pastors-card-title">{pastors.names}</h2>
+    <p>{pastors.summary}</p>
+  </div>
+  <button class="pastors-more-button" type="button" aria-haspopup="dialog" aria-controls="pastor-sheet" data-pastors-open>
+    <span>Ver más</span>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+  </button>
+</article>
+
+<div class="pastor-sheet-layer" data-pastor-sheet-layer hidden>
+  <button class="pastor-sheet-backdrop" type="button" tabindex="-1" aria-label="Cerrar información de los pastores" data-pastor-sheet-backdrop></button>
+  <section
+    id="pastor-sheet"
+    class="pastor-sheet"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="pastor-sheet-title"
+    aria-describedby="pastor-sheet-introduction"
+    tabindex="-1"
+    data-state="closed"
+    data-pastor-sheet
+  >
+    <button class="pastor-sheet-handle" type="button" aria-label="Expandir información de los pastores" data-pastor-sheet-handle>
+      <span aria-hidden="true"></span>
+    </button>
+    <div class="pastor-sheet-content" data-pastor-sheet-content>
+      <div class="pastor-sheet-cover">
+        <div class="pastor-sheet-cover-placeholder" aria-hidden="true"></div>
+        <div class="pastor-sheet-cover-caption">
+          <h2 id="pastor-sheet-title">{pastors.names}</h2>
+          <p>{pastors.role}</p>
+        </div>
+      </div>
+      <p class="pastor-sheet-introduction" id="pastor-sheet-introduction">{pastors.introduction}</p>
+
+      <section class="pastor-sheet-section" aria-labelledby="pastor-vision-title">
+        <h3 id="pastor-vision-title">{pastors.visionTitle}</h3>
+        <p>{pastors.vision}</p>
+      </section>
+      <section class="pastor-sheet-section" aria-labelledby="pastor-values-title">
+        <h3 id="pastor-values-title">{pastors.valuesTitle}</h3>
+        <ul class="pastor-values-list">
+          {pastors.values.map((value) => <li>{value}</li>)}
+        </ul>
+      </section>
+    </div>
+  </section>
+</div>
+
+<script>
+  import { getPastorSheetState } from '../scripts/pastor-sheet.js';
+
+  const layer = document.querySelector('[data-pastor-sheet-layer]');
+  const sheet = document.querySelector('[data-pastor-sheet]');
+  const handle = document.querySelector('[data-pastor-sheet-handle]');
+  const openButton = document.querySelector('[data-pastors-open]');
+  const backdrop = document.querySelector('[data-pastor-sheet-backdrop]');
+  const pageContent = [
+    document.querySelector('[data-site-header]'),
+    ...document.querySelectorAll('.home-main > :not([data-pastor-sheet-layer])'),
+    document.querySelector('[data-bottom-dock]'),
+  ].filter(Boolean);
+  const previousInertStates = pageContent.map((element) => element.inert);
+  let state = 'closed';
+  let dragStartY = null;
+  let dragged = false;
+
+  const renderState = (nextState) => {
+    state = nextState;
+    sheet.dataset.state = state;
+    handle.setAttribute(
+      'aria-label',
+      state === 'full' ? 'Bajar información de los pastores' : 'Expandir información de los pastores',
+    );
+  };
+
+  const closeSheet = () => {
+    if (state === 'closed') return;
+    renderState(getPastorSheetState(state, 'close'));
+    layer.hidden = true;
+    document.body.classList.remove('pastor-sheet-open');
+    pageContent.forEach((element, index) => { element.inert = previousInertStates[index]; });
+    openButton.focus();
+  };
+
+  openButton.addEventListener('click', () => {
+    renderState(getPastorSheetState(state, 'open'));
+    layer.hidden = false;
+    document.body.classList.add('pastor-sheet-open');
+    pageContent.forEach((element) => { element.inert = true; });
+    window.requestAnimationFrame(() => handle.focus());
+  });
+
+  backdrop.addEventListener('click', closeSheet);
+  handle.addEventListener('click', () => {
+    if (dragged) {
+      dragged = false;
+      return;
+    }
+    renderState(getPastorSheetState(state, state === 'half' ? 'expand' : 'collapse'));
+  });
+
+  handle.addEventListener('pointerdown', (event) => {
+    dragStartY = event.clientY;
+    dragged = false;
+    handle.setPointerCapture(event.pointerId);
+  });
+  handle.addEventListener('pointerup', (event) => {
+    if (dragStartY === null) return;
+    const delta = event.clientY - dragStartY;
+    dragStartY = null;
+    if (Math.abs(delta) < 45) return;
+    dragged = true;
+    if (delta < 0) renderState(getPastorSheetState(state, 'expand'));
+    else if (state === 'full') renderState(getPastorSheetState(state, 'collapse'));
+    else closeSheet();
+  });
+  handle.addEventListener('pointercancel', () => { dragStartY = null; });
+
+  document.addEventListener('keydown', (event) => {
+    if (state === 'closed') return;
+    if (event.key === 'Escape') {
+      closeSheet();
+      return;
+    }
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      handle.focus();
+    }
+  });
+</script>

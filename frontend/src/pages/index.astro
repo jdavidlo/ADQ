@@ -1,0 +1,140 @@
+---
+import SiteHeader from '../components/SiteHeader.astro';
+import VerseCard from '../components/VerseCard.astro';
+import WelcomeCarousel from '../components/WelcomeCarousel.astro';
+import GatheringsCard from '../components/GatheringsCard.astro';
+import PastorsCard from '../components/PastorsCard.astro';
+import SmallGroupsCard from '../components/SmallGroupsCard.astro';
+import FeedCard from '../components/FeedCard.astro';
+import BottomDock from '../components/BottomDock.astro';
+import { getHomeContent } from '../services/daily-verse.js';
+import '../styles/global.css';
+const homeContent = getHomeContent();
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Explora la vida y los recursos de ADQ desde un solo lugar." />
+    <meta name="theme-color" content="#f3f4f0" />
+    <title>ADQ — Inicio</title>
+  </head>
+  <body id="inicio" data-home-mode={homeContent.type}>
+    <SiteHeader />
+    <main class="home-main">
+      <h1 class="sr-only">Inicio de ADQ</h1>
+      {homeContent.type === 'daily-verse' && <VerseCard verse={homeContent.verse} />}
+      <WelcomeCarousel />
+      <GatheringsCard />
+      <PastorsCard />
+      <SmallGroupsCard />
+      <section class="feed-list" id="contenido" aria-label="Tarjetas de contenido">
+        {Array.from({ length: 5 }, (_, index) => <FeedCard index={index + 1} />)}
+      </section>
+    </main>
+    <BottomDock />
+
+    <script>
+      import { getChromeState, getScrollDirection } from '../scripts/scroll-state.js';
+
+      const header = document.querySelector('[data-site-header]');
+      const dock = document.querySelector('[data-bottom-dock]');
+      const searchTrigger = document.querySelector('[data-search-trigger]');
+      const searchScreen = document.querySelector('[data-search-screen]');
+      const searchCancel = document.querySelector('[data-search-cancel]');
+      const searchInput = document.querySelector('[data-search-input]');
+      let previousY = window.scrollY;
+      let scrollFrame = 0;
+
+      const closeSearch = () => {
+        if (searchScreen.hidden) return;
+        searchScreen.hidden = true;
+        searchScreen.setAttribute('aria-hidden', 'true');
+        searchTrigger.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('search-open');
+        searchTrigger.focus();
+      };
+
+      const openSearch = () => {
+        searchScreen.hidden = false;
+        searchScreen.setAttribute('aria-hidden', 'false');
+        searchTrigger.setAttribute('aria-expanded', 'true');
+        document.body.classList.add('search-open');
+        window.requestAnimationFrame(() => searchInput.focus());
+      };
+
+      searchTrigger.addEventListener('click', openSearch);
+      searchCancel.addEventListener('click', closeSearch);
+      searchScreen.addEventListener('click', (event) => {
+        if (event.target === searchScreen) closeSearch();
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (searchScreen.hidden) return;
+        if (event.key === 'Escape') {
+          closeSearch();
+          return;
+        }
+
+        if (event.key === 'Tab') {
+          const focusable = [...searchScreen.querySelectorAll('button:not([disabled]), input:not([disabled])')];
+          const first = focusable[0];
+          const last = focusable.at(-1);
+          if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+          } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+          }
+        }
+      });
+
+      document.querySelectorAll('[data-search-choice]').forEach((choice) => {
+        choice.addEventListener('click', () => {
+          document.querySelectorAll('[data-search-choice]').forEach((item) => {
+            item.setAttribute('aria-pressed', String(item === choice));
+          });
+          searchInput.value = choice.dataset.searchLabel;
+          searchInput.focus();
+        });
+      });
+
+      document.querySelectorAll('[data-dock-choice]').forEach((choice) => {
+        choice.addEventListener('click', () => {
+          document.querySelectorAll('[data-dock-choice]').forEach((item) => {
+            item.setAttribute('aria-pressed', String(item === choice));
+          });
+          if (choice.dataset.dockChoice === 'home') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        });
+      });
+
+      const updateChrome = () => {
+        scrollFrame = 0;
+        const currentY = Math.max(0, window.scrollY);
+        if (currentY < 24) {
+          header.classList.remove('is-hidden');
+          dock.classList.remove('is-compact');
+          previousY = currentY;
+        } else {
+          const direction = getScrollDirection(previousY, currentY);
+          const state = getChromeState(direction);
+          if (state) {
+            header.classList.toggle('is-hidden', !state.headerVisible);
+            dock.classList.toggle('is-compact', state.dockCompact);
+            if (!state.headerVisible) closeMenu();
+            previousY = currentY;
+          }
+        }
+      };
+
+      window.addEventListener('scroll', () => {
+        if (!scrollFrame) scrollFrame = window.requestAnimationFrame(updateChrome);
+      }, { passive: true });
+    </script>
+  </body>
+</html>

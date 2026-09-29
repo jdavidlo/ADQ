@@ -1,0 +1,51 @@
+---
+const searchOptions = [
+  { id: 'grupos', label: 'Grupos pequeños' },
+  { id: 'servicios', label: 'Servicios' },
+  { id: 'amigotez', label: 'Amigotez' },
+  { id: 'lectura', label: 'Plan de lectura' },
+];
+---
+
+<header class="site-header" data-site-header>
+  <div class="header-inner">
+    <a class="church-logo-link" href="#inicio" aria-label="ADQ, inicio">
+      <span class="church-logo-placeholder" aria-hidden="true"></span>
+    </a>
+
+    <div class="search-control">
+      <button class="search-trigger" type="button" aria-expanded="false" aria-controls="search-screen" aria-haspopup="dialog" data-search-trigger>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 4.3 4.3"></path></svg>
+        <span>Buscar</span>
+      </button>
+    </div>
+
+    <button class="message-button" type="button" aria-label="Mensajes, 1 sin leer">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 11.5a7.5 7.5 0 0 1-7.5 7.5H8l-4.5 2v-5.3A7.4 7.4 0 0 1 3 11.5 7.5 7.5 0 1 1 20.5 11.5Z"></path><path d="M7.5 10h9M7.5 13.5h6"></path></svg>
+      <span class="message-count" aria-hidden="true">1</span>
+    </button>
+  </div>
+</header>
+
+<section class="search-screen" id="search-screen" role="dialog" aria-modal="true" aria-label="Buscar en ADQ" aria-hidden="true" data-search-screen hidden>
+  <div class="search-screen-inner">
+    <div class="search-screen-topbar">
+      <label class="search-input-shell" for="adq-search-input">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 4.3 4.3"></path></svg>
+        <input id="adq-search-input" type="search" placeholder="Buscar" autocomplete="off" data-search-input />
+      </label>
+      <button class="search-cancel" type="button" data-search-cancel>Cancelar</button>
+    </div>
+
+    <div class="search-screen-content">
+      <nav class="search-options" aria-label="Categorías de búsqueda">
+        {searchOptions.map((item) => (
+          <button class="search-option" type="button" aria-pressed="false" data-search-choice={item.id} data-search-label={item.label}>
+            <span class="search-option-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 4.3 4.3"></path></svg></span>
+            <span>{item.label}</span>
+          </button>
+        ))}
+      </nav>
+    </div>
+  </div>
+</section>

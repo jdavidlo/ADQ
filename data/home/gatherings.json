@@ -1,0 +1,26 @@
+{
+  "isSample": true,
+  "sunday": {
+    "day": "Domingo",
+    "meetings": [
+      { "name": "Primera reunión", "time": "10:30 a. m." },
+      { "name": "Segunda reunión", "time": "12:30 p. m." }
+    ]
+  },
+  "additional": [
+    { "day": "Lunes", "name": "Oración", "time": "8:00 p. m." },
+    { "day": "Jueves", "name": "Mujeres", "time": "9:00 a. m." },
+    { "day": "Viernes", "name": "Jóvenes", "time": "8:00 p. m." },
+    { "day": "Sábado", "name": "Hombres", "time": "8:00 a. m." }
+  ],
+  "location": {
+    "address": "Calle Ejemplo 123, Colonia Ejemplo, C. P. 00000, Estado de México, México",
+    "googleMapsUrl": null,
+    "isSample": true
+  },
+  "contact": {
+    "phone": "+52 55 0000 0000",
+    "email": "contacto@example.org",
+    "isSample": true
+  }
+}

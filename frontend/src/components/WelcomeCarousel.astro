@@ -1,0 +1,85 @@
+---
+const slideCount = 3;
+---
+
+<section class="welcome-carousel" aria-label="Presentación de ADQ" data-welcome-carousel>
+  <div class="carousel-slides" data-carousel-slides>
+    {Array.from({ length: slideCount }, (_, index) => (
+      <div class:list={["carousel-slide", { "is-active": index === 0 }]} aria-hidden={index !== 0}>
+        <div class="carousel-image-placeholder" role="img" aria-label={`Espacio reservado para imagen ${index + 1}`}></div>
+      </div>
+    ))}
+  </div>
+
+  <div class="welcome-carousel-copy">
+    <h2>Bienvenido a ADQ</h2>
+    <p>Buscamos amar a Dios y a las personas.</p>
+  </div>
+
+  <div class="carousel-pagination" role="group" aria-label="Seleccionar imagen">
+    {Array.from({ length: slideCount }, (_, index) => (
+      <button
+        class:list={["carousel-dot", { "is-active": index === 0 }]}
+        type="button"
+        aria-label={`Mostrar imagen ${index + 1}`}
+        aria-pressed={index === 0 ? "true" : "false"}
+        data-carousel-dot={index}
+      ></button>
+    ))}
+  </div>
+</section>
+
+<script>
+  import { getNextCarouselIndex } from '../scripts/carousel.js';
+
+  document.querySelectorAll('[data-welcome-carousel]').forEach((carousel) => {
+    const slides = [...carousel.querySelectorAll('.carousel-slide')];
+    const dots = [...carousel.querySelectorAll('[data-carousel-dot]')];
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let currentIndex = 0;
+    let timer;
+    let isHovered = false;
+    let hasFocus = false;
+
+    const showSlide = (index) => {
+      currentIndex = index;
+      slides.forEach((slide, slideIndex) => {
+        const active = slideIndex === currentIndex;
+        slide.classList.toggle('is-active', active);
+        slide.setAttribute('aria-hidden', String(!active));
+      });
+      dots.forEach((dot, dotIndex) => {
+        const active = dotIndex === currentIndex;
+        dot.classList.toggle('is-active', active);
+        dot.setAttribute('aria-pressed', String(active));
+      });
+    };
+
+    const stopAutoPlay = () => window.clearInterval(timer);
+    const startAutoPlay = () => {
+      stopAutoPlay();
+      if (!reducedMotion.matches && !isHovered && !hasFocus) {
+        timer = window.setInterval(() => {
+          showSlide(getNextCarouselIndex(currentIndex, slides.length, 1));
+        }, 5000);
+      }
+    };
+
+    dots.forEach((dot) => dot.addEventListener('click', () => {
+      showSlide(Number(dot.dataset.carouselDot));
+      startAutoPlay();
+    }));
+
+    carousel.addEventListener('mouseenter', () => { isHovered = true; stopAutoPlay(); });
+    carousel.addEventListener('mouseleave', () => { isHovered = false; startAutoPlay(); });
+    carousel.addEventListener('focusin', () => { hasFocus = true; stopAutoPlay(); });
+    carousel.addEventListener('focusout', (event) => {
+      if (!carousel.contains(event.relatedTarget)) {
+        hasFocus = false;
+        startAutoPlay();
+      }
+    });
+    reducedMotion.addEventListener('change', startAutoPlay);
+    startAutoPlay();
+  });
+</script>

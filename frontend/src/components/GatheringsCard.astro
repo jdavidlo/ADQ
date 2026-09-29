@@ -1,0 +1,159 @@
+---
+import { getGatherings, getGoogleMapsUrl } from '../services/gatherings.js';
+const gatherings = getGatherings();
+const mapUrl = getGoogleMapsUrl();
+---
+
+<article class="gatherings-card" aria-labelledby="gatherings-title">
+  <div class="gatherings-heading">
+    <h2 id="gatherings-title">Reuniones</h2>
+  </div>
+  <ul class="gathering-meeting-list sunday-meeting-list">
+    {gatherings.sunday.meetings.map((meeting) => (
+      <li><span>{gatherings.sunday.day} · {meeting.name}</span><time>{meeting.time}</time></li>
+    ))}
+  </ul>
+  <div class="gatherings-card-actions">
+    <a class="gatherings-map-button" href={mapUrl} target="_blank" rel="noopener noreferrer">
+      <span>Cómo llegar</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>
+    </a>
+    <button class="gatherings-details-button" type="button" aria-haspopup="dialog" aria-controls="gatherings-sheet" data-gatherings-open>
+      Ver más <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+    </button>
+  </div>
+</article>
+
+<div class="gatherings-sheet-layer" data-gatherings-sheet-layer hidden>
+  <button class="gatherings-sheet-backdrop" type="button" tabindex="-1" aria-label="Cerrar reuniones" data-gatherings-sheet-backdrop></button>
+  <section class="gatherings-sheet" role="dialog" aria-modal="true" aria-labelledby="gatherings-sheet-title" tabindex="-1" data-gatherings-sheet>
+    <button class="gatherings-sheet-handle" type="button" aria-label="Expandir reuniones" data-gatherings-sheet-handle><span aria-hidden="true"></span></button>
+    <div class="gatherings-sheet-content">
+      <h2 id="gatherings-sheet-title">Reuniones</h2>
+      <ul class="gathering-meeting-list">
+        {gatherings.sunday.meetings.map((meeting) => (
+          <li><span>{gatherings.sunday.day} · {meeting.name}</span><time>{meeting.time}</time></li>
+        ))}
+        {gatherings.additional.map((meeting) => (
+          <li><span>{meeting.day} · {meeting.name}</span><time>{meeting.time}</time></li>
+        ))}
+      </ul>
+      <section class="gatherings-detail-section" aria-labelledby="gatherings-location-title">
+        <h3 id="gatherings-location-title">Ubicación</h3>
+        {gatherings.location.address && <p class="gatherings-address">{gatherings.location.address}</p>}
+        {mapUrl ? (
+          <a class="gatherings-map-button" href={mapUrl} target="_blank" rel="noopener noreferrer">
+            <span>Cómo llegar</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>
+          </a>
+        ) : (
+          <button class="gatherings-map-button" type="button" disabled aria-label="Falta configurar la ubicación de la iglesia">
+            <span>Google Maps pendiente de ubicación</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>
+          </button>
+        )}
+      </section>
+      {(gatherings.contact.phone || gatherings.contact.email) && (
+        <section class="gatherings-detail-section" aria-labelledby="gatherings-contact-title">
+          <h3 id="gatherings-contact-title">Contacto</h3>
+          <div class="gatherings-contact-list">
+            {gatherings.contact.phone && (
+              <div class="gatherings-contact-item">
+                <span class="gatherings-contact-label">Teléfono</span>
+                {gatherings.contact.isSample ? <span class="gatherings-contact-value">{gatherings.contact.phone}</span> : <a class="gatherings-contact-value" href={`tel:${gatherings.contact.phone}`}>{gatherings.contact.phone}</a>}
+              </div>
+            )}
+            {gatherings.contact.email && (
+              <div class="gatherings-contact-item">
+                <span class="gatherings-contact-label">Correo</span>
+                {gatherings.contact.isSample ? <span class="gatherings-contact-value">{gatherings.contact.email}</span> : <a class="gatherings-contact-value" href={`mailto:${gatherings.contact.email}`}>{gatherings.contact.email}</a>}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+    </div>
+  </section>
+</div>
+
+<script>
+  import { getPastorSheetState } from '../scripts/pastor-sheet.js';
+
+  const layer = document.querySelector('[data-gatherings-sheet-layer]');
+  const sheet = document.querySelector('[data-gatherings-sheet]');
+  const handle = document.querySelector('[data-gatherings-sheet-handle]');
+  const openButton = document.querySelector('[data-gatherings-open]');
+  const backdrop = document.querySelector('[data-gatherings-sheet-backdrop]');
+  const pageContent = [
+    document.querySelector('[data-site-header]'),
+    ...document.querySelectorAll('.home-main > :not([data-gatherings-sheet-layer])'),
+    document.querySelector('[data-bottom-dock]'),
+  ].filter(Boolean);
+  const previousInertStates = pageContent.map((element) => element.inert);
+  let state = 'closed';
+  let dragStartY = null;
+  let dragged = false;
+
+  const renderState = (nextState) => {
+    state = nextState;
+    sheet.dataset.state = state;
+    handle.setAttribute(
+      'aria-label',
+      state === 'full' ? 'Bajar reuniones' : 'Expandir reuniones',
+    );
+  };
+
+  const closeSheet = () => {
+    if (state === 'closed') return;
+    renderState(getPastorSheetState(state, 'close'));
+    layer.hidden = true;
+    document.body.classList.remove('gatherings-sheet-open');
+    pageContent.forEach((element, index) => { element.inert = previousInertStates[index]; });
+    openButton?.focus();
+  };
+
+  openButton?.addEventListener('click', () => {
+    renderState(getPastorSheetState(state, 'open'));
+    layer.hidden = false;
+    document.body.classList.add('gatherings-sheet-open');
+    pageContent.forEach((element) => { element.inert = true; });
+    window.requestAnimationFrame(() => handle.focus());
+  });
+
+  backdrop?.addEventListener('click', closeSheet);
+  handle?.addEventListener('click', () => {
+    if (dragged) {
+      dragged = false;
+      return;
+    }
+    renderState(getPastorSheetState(state, state === 'half' ? 'expand' : 'collapse'));
+  });
+  handle?.addEventListener('pointerdown', (event) => {
+    dragStartY = event.clientY;
+    dragged = false;
+    handle.setPointerCapture(event.pointerId);
+  });
+  handle?.addEventListener('pointerup', (event) => {
+    if (dragStartY === null) return;
+    const delta = event.clientY - dragStartY;
+    dragStartY = null;
+    if (Math.abs(delta) < 45) return;
+    dragged = true;
+    if (delta < 0) renderState(getPastorSheetState(state, 'expand'));
+    else if (state === 'full') renderState(getPastorSheetState(state, 'collapse'));
+    else closeSheet();
+  });
+  handle?.addEventListener('pointercancel', () => { dragStartY = null; });
+
+  document.addEventListener('keydown', (event) => {
+    if (state === 'closed') return;
+    if (event.key === 'Escape') {
+      closeSheet();
+      return;
+    }
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      handle.focus();
+    }
+  });
+</script>

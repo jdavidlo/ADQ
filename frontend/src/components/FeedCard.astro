@@ -1,0 +1,24 @@
+---
+const { index } = Astro.props;
+const placeholderHeight = [108, 148, 124, 172, 116][(index - 1) % 5];
+---
+
+<article class="feed-card" aria-label={`Tarjeta de contenido pendiente ${index}`}>
+  <span class="sr-only">Contenido pendiente de definir.</span>
+  <div class="feed-card-header" aria-hidden="true">
+    <span class="skeleton-avatar"></span>
+    <span class="skeleton-copy">
+      <span class="skeleton-line skeleton-line--name"></span>
+      <span class="skeleton-line skeleton-line--meta"></span>
+    </span>
+    <span class="skeleton-menu"></span>
+  </div>
+  <div class="feed-card-body" aria-hidden="true">
+    <span class="skeleton-line skeleton-line--body"></span>
+    <span class="skeleton-line skeleton-line--body-short"></span>
+    <div class="content-placeholder" style={`--placeholder-height: ${placeholderHeight}px`}></div>
+  </div>
+  <div class="feed-card-actions" aria-hidden="true">
+    <span></span><span></span><span></span>
+  </div>
+</article>

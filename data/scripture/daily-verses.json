@@ -1,0 +1,11 @@
+{
+  "mode": "daily-verse",
+  "translation": "NVI",
+  "liveSermon": {
+    "outlineUrl": null
+  },
+  "verses": [
+    { "reference": "Salmo 23:1", "text": "El Señor es mi pastor, nada me falta." },
+    { "reference": "Juan 14:27", "text": "La paz les dejo; mi paz les doy." }
+  ]
+}

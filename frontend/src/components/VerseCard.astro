@@ -1,0 +1,59 @@
+---
+const { verse } = Astro.props;
+const generatedAt = new Date();
+const formatAbbreviatedDate = (date) =>
+  date.toLocaleDateString('es-MX', { day: '2-digit', month: 'short' }).replace(/\./g, '');
+---
+
+<section class="verse-card" aria-labelledby="verse-title" data-verse-card>
+  <div class="verse-card-topline">
+    <div>
+      <p class="eyebrow" id="verse-title">Versículo del día</p>
+      <p class="verse-day-label verse-reference-line">
+        <cite data-verse-reference>{verse.reference}</cite>
+        <span data-verse-translation>{verse.translation}</span>
+      </p>
+    </div>
+  </div>
+  <blockquote>
+    <p class="verse-text" data-verse-text>{verse.text}</p>
+    <footer class="verse-attribution">
+      <time data-verse-date datetime={generatedAt.toISOString().slice(0, 10)}>{formatAbbreviatedDate(generatedAt)}</time>
+    </footer>
+  </blockquote>
+</section>
+
+<script>
+  import { getHomeContent } from '../services/daily-verse.js';
+
+  const verseCard = document.querySelector('[data-verse-card]');
+  if (verseCard) {
+    const text = verseCard.querySelector('[data-verse-text]');
+    const reference = verseCard.querySelector('[data-verse-reference]');
+    const translation = verseCard.querySelector('[data-verse-translation]');
+    const dateLabel = verseCard.querySelector('[data-verse-date]');
+
+    const refreshVerse = () => {
+      const today = new Date();
+      const homeContent = getHomeContent(undefined, today);
+      const verse = homeContent.verse;
+      text.textContent = verse.text;
+      reference.textContent = verse.reference;
+      translation.textContent = verse.translation;
+      dateLabel.textContent = today.toLocaleDateString('es-MX', { day: '2-digit', month: 'short' }).replace(/\./g, '');
+      dateLabel.dateTime = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    };
+
+    const scheduleNextRefresh = () => {
+      const now = new Date();
+      const nextDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+      window.setTimeout(() => {
+        refreshVerse();
+        scheduleNextRefresh();
+      }, nextDay.getTime() - now.getTime());
+    };
+
+    refreshVerse();
+    scheduleNextRefresh();
+  }
+</script>
