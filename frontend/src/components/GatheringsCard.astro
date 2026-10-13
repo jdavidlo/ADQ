@@ -115,6 +115,9 @@ const mapUrl = getGoogleMapsUrl();
   openButton?.addEventListener('click', () => {
     renderState(getPastorSheetState(state, 'open'));
     layer.hidden = false;
+    const content = sheet.querySelector('.gatherings-sheet-content');
+    content.scrollTop = 0;
+    content.scrollLeft = 0;
     document.body.classList.add('gatherings-sheet-open');
     pageContent.forEach((element) => { element.inert = true; });
     window.requestAnimationFrame(() => handle.focus());

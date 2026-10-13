@@ -25,5 +25,6 @@ test('always opens the groups sheet fully and closes it directly', () => {
   assert.equal(getSmallGroupsSheetState('closed', 'open'), 'full');
   assert.equal(getSmallGroupsSheetState('half', 'open'), 'full');
   assert.equal(getSmallGroupsSheetState('full', 'close'), 'closed');
+  assert.equal(getSmallGroupsSheetState('full', 'collapse'), 'closed');
   assert.equal(getSmallGroupsSheetState('closed', 'close'), 'closed');
 });

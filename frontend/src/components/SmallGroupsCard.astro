@@ -85,6 +85,7 @@ const smallGroups = getSmallGroups();
     if (state === 'closed') return;
     renderState('close');
     layer.hidden = true;
+    frame.removeAttribute('src');
     document.body.classList.remove('small-groups-sheet-open');
     pageContent.forEach((element, index) => { element.inert = previousInertStates[index]; });
     openButton?.focus();
@@ -95,12 +96,12 @@ const smallGroups = getSmallGroups();
     layer.hidden = false;
     document.body.classList.add('small-groups-sheet-open');
     pageContent.forEach((element) => { element.inert = true; });
-    if (!frame.hasAttribute('src')) frame.src = frame.dataset.src;
+    frame.src = frame.dataset.src;
     window.requestAnimationFrame(() => closeHandle.focus());
   });
 
   bindSheetGestures(sheet, () => state, (action) => {
-    if (action === 'close') closeSheet();
+    if (action === 'close' || action === 'collapse') closeSheet();
     else renderState(action);
   });
   closeHandle?.addEventListener('click', closeSheet);

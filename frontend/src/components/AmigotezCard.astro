@@ -105,6 +105,9 @@ const amigotez = getAmigotez();
   openButton?.addEventListener('click', () => {
     renderState(getPastorSheetState(state, 'open'));
     layer.hidden = false;
+    const content = sheet.querySelector('.amigotez-sheet-content');
+    content.scrollTop = 0;
+    content.scrollLeft = 0;
     document.body.classList.add('amigotez-sheet-open');
     pageContent.forEach((element) => { element.inert = true; });
     window.requestAnimationFrame(() => handle.focus());

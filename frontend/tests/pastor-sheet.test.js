@@ -2,8 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { getPastorSheetState } from '../src/scripts/pastor-sheet.js';
 
-test('opens the pastor sheet at its half-height state', () => {
-  assert.equal(getPastorSheetState('closed', 'open'), 'half');
+test('always opens shared sheets expanded, regardless of their previous height', () => {
+  assert.equal(getPastorSheetState('closed', 'open'), 'full');
+  assert.equal(getPastorSheetState('half', 'open'), 'full');
 });
 
 test('expands and collapses between the half and near-full states', () => {
