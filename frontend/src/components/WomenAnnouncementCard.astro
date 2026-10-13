@@ -1,0 +1,16 @@
+---
+import { getCommunityAnnouncement } from '../services/community-announcements.js';
+import '../styles/community-announcements.css';
+const announcement = getCommunityAnnouncement('women');
+---
+<article class="women-editorial" aria-labelledby="women-announcement-title">
+  <div class="women-editorial-copy">
+    <span class="community-eyebrow">Creciendo juntas</span>
+    <h2 id="women-announcement-title">{announcement.title}</h2>
+    <p>{announcement.description}</p>
+  </div>
+  <div class="women-editorial-photo">
+    {announcement.image ? <img src={announcement.image} alt={announcement.imageAlt} loading="lazy" decoding="async" /> : <div class="community-photo-placeholder" role="img" aria-label={announcement.imageAlt}><span aria-hidden="true">Fotografía</span></div>}
+  </div>
+  <p class="women-editorial-schedule"><span>Todos los {announcement.day.toLocaleLowerCase('es')}</span><span>{announcement.time}</span></p>
+</article>

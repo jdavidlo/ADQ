@@ -1,0 +1,25 @@
+{
+  "women": {
+    "title": "Reuniones de mujeres",
+    "description": "Un espacio para compartir, aprender y crecer juntas en la fe.",
+    "meetingName": "Mujeres",
+    "image": null,
+    "imageAlt": "Espacio reservado para una fotografía de la reunión de mujeres"
+  },
+  "men": {
+    "title": "Reuniones de varones",
+    "description": "Compartamos un tiempo de fe, conversación y comunidad.",
+    "meetingName": "Hombres",
+    "image": null,
+    "imageAlt": "Espacio reservado para una fotografía de la reunión de varones"
+  },
+  "college": {
+    "name": "Colegio Renaissance",
+    "logo": null,
+    "description": "Educación bilingüe con valores cristianos.",
+    "websiteUrl": "https://colegiorenaissance.com/",
+    "whatsappNumber": null,
+    "whatsappConfirmed": false,
+    "message": "Hola, vi el Colegio Renaissance en la página de ADQ y quisiera información sobre inscripciones."
+  }
+}

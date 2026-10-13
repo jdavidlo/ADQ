@@ -1,0 +1,13 @@
+---
+import { getCommunityAnnouncement } from '../services/community-announcements.js';
+import '../styles/community-announcements.css';
+const announcement = getCommunityAnnouncement('men');
+---
+<article class="men-invitation" aria-labelledby="men-announcement-title">
+  <h2 id="men-announcement-title">{announcement.title}</h2>
+  <p class="men-invitation-description">{announcement.description}</p>
+  <div class="men-invitation-schedule">
+    <span>Todos los {announcement.day.toLocaleLowerCase('es')}</span>
+    <span>{announcement.time}</span>
+  </div>
+</article>

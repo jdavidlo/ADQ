@@ -57,6 +57,7 @@ const pastors = getPastors();
 
 <script>
   import { getPastorSheetState } from '../scripts/pastor-sheet.js';
+  import { bindSheetGestures } from '../scripts/sheet-gestures.js';
 
   const layer = document.querySelector('[data-pastor-sheet-layer]');
   const sheet = document.querySelector('[data-pastor-sheet]');
@@ -70,8 +71,7 @@ const pastors = getPastors();
   ].filter(Boolean);
   const previousInertStates = pageContent.map((element) => element.inert);
   let state = 'closed';
-  let dragStartY = null;
-  let dragged = false;
+
 
   const renderState = (nextState) => {
     state = nextState;
@@ -101,29 +101,13 @@ const pastors = getPastors();
 
   backdrop.addEventListener('click', closeSheet);
   handle.addEventListener('click', () => {
-    if (dragged) {
-      dragged = false;
-      return;
-    }
     renderState(getPastorSheetState(state, state === 'half' ? 'expand' : 'collapse'));
   });
 
-  handle.addEventListener('pointerdown', (event) => {
-    dragStartY = event.clientY;
-    dragged = false;
-    handle.setPointerCapture(event.pointerId);
+  bindSheetGestures(sheet, () => state, (action) => {
+    if (action === 'close') closeSheet();
+    else renderState(getPastorSheetState(state, action));
   });
-  handle.addEventListener('pointerup', (event) => {
-    if (dragStartY === null) return;
-    const delta = event.clientY - dragStartY;
-    dragStartY = null;
-    if (Math.abs(delta) < 45) return;
-    dragged = true;
-    if (delta < 0) renderState(getPastorSheetState(state, 'expand'));
-    else if (state === 'full') renderState(getPastorSheetState(state, 'collapse'));
-    else closeSheet();
-  });
-  handle.addEventListener('pointercancel', () => { dragStartY = null; });
 
   document.addEventListener('keydown', (event) => {
     if (state === 'closed') return;

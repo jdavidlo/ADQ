@@ -111,6 +111,45 @@ body.search-open { overflow: hidden; }
 .gatherings-map-button svg, .gatherings-details-button svg { width: 18px; height: 18px; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
 .gatherings-details-button { padding-inline: 15px 12px; }
 
+.prayer-announcement-card { display: grid; grid-template-columns: minmax(100px, .85fr) minmax(0, 1.15fr); min-height: 132px; margin-bottom: 18px; overflow: hidden; border: 1px solid #e7e9e5; border-radius: 17px; background: var(--paper); box-shadow: 0 5px 18px rgba(31, 44, 35, .04); }
+.prayer-announcement-image { display: block; width: 100%; height: 100%; min-height: 132px; object-fit: cover; }
+.prayer-announcement-image-placeholder { display: grid; min-width: 0; min-height: 132px; place-items: center; overflow: hidden; background: radial-gradient(circle at 25% 20%, rgba(255, 255, 255, .68), transparent 34%), linear-gradient(145deg, #e5e9e5, #cbd5cd); }
+.prayer-announcement-image-placeholder svg { width: 44px; height: 44px; fill: none; stroke: #748579; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.prayer-announcement-copy { display: flex; min-width: 0; flex-direction: column; justify-content: center; gap: 7px; padding: 14px; }
+.prayer-announcement-copy h2 { margin: 0; color: var(--ink); font-size: 16px; line-height: 1.3; }
+.prayer-announcement-copy p { margin: 0; color: #657168; font-size: 12px; font-weight: 600; line-height: 1.45; }
+@media (max-width: 340px) {
+  .prayer-announcement-card { grid-template-columns: 92px minmax(0, 1fr); }
+  .prayer-announcement-copy { padding: 11px; }
+  .prayer-announcement-copy h2 { font-size: 15px; }
+  .prayer-announcement-copy p { font-size: 11px; }
+}
+
+.youth-polaroid-card { display: grid; grid-template-rows: 38px auto 58px; gap: 0; margin-bottom: 18px; padding: 8px 8px 0; overflow: hidden; border: 1px solid #e2e5df; border-radius: 6px; background: #fff; box-shadow: 0 7px 20px rgba(31, 44, 35, .1); }
+.youth-polaroid-title { display: flex; min-width: 0; align-items: center; margin: 0; padding-left: 4px; color: #34483a; font-family: 'Segoe Script', 'Brush Script MT', 'Segoe Print', 'Bradley Hand', cursive; font-size: 20px; font-style: italic; font-weight: 500; line-height: 1.1; transform: rotate(-1deg); transform-origin: left center; }
+.youth-polaroid-photo { position: relative; width: 100%; min-width: 0; overflow: hidden; aspect-ratio: 1920 / 955; border: 1px solid rgba(38, 51, 43, .08); background: #e5e9e5; }
+.youth-carousel-slide { position: absolute; inset: 0; display: none; }
+.youth-carousel-slide.is-active { display: block; }
+.youth-carousel-image { display: block; width: 100%; height: 100%; object-fit: contain; object-position: center; }
+.youth-carousel-image-placeholder { position: absolute; inset: 0; display: grid; place-items: center; background: linear-gradient(145deg, #e5e9e5, #cbd5cd); }
+.youth-carousel-slide:nth-child(2) .youth-carousel-image-placeholder { background: linear-gradient(145deg, #e5e9e5, #d0d7d1); }
+.youth-carousel-slide:nth-child(3) .youth-carousel-image-placeholder { background: linear-gradient(145deg, #e9ebe8, #c7d1c9); }
+.youth-carousel-image-placeholder svg { width: 44px; height: 44px; fill: none; stroke: #748579; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.youth-polaroid-footer { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); min-width: 0; align-items: center; gap: 4px; min-height: 58px; padding: 4px 5px 8px; background: #fff; }
+.youth-polaroid-day, .youth-polaroid-time { color: #34483a; font-size: clamp(11px, 3.4vw, 14px); font-weight: 700; line-height: 1.25; white-space: nowrap; }
+.youth-polaroid-day { justify-self: start; }
+.youth-polaroid-time { justify-self: end; }
+.youth-carousel-pagination { display: flex; justify-self: center; align-items: center; gap: 1px; }
+.youth-carousel-dot { display: grid; width: 32px; height: 32px; flex: 0 0 32px; place-items: center; padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer; }
+.youth-carousel-dot::before { width: 7px; height: 7px; border-radius: 9px; background: rgba(52, 72, 58, .32); content: ''; transition: width .18s ease, background .18s ease; }
+.youth-carousel-dot.is-active::before { width: 17px; background: #34483a; }
+@media (max-width: 340px) {
+  .youth-polaroid-card { grid-template-rows: 34px auto 56px; padding: 6px 6px 0; }
+  .youth-polaroid-title { font-size: 18px; }
+  .youth-polaroid-footer { gap: 3px; padding-inline: 3px; }
+  .youth-carousel-dot { width: 30px; height: 30px; flex-basis: 30px; }
+}
+
 .small-groups-card { display: grid; gap: 0; margin-bottom: 18px; overflow: hidden; border: 1px solid rgba(38, 51, 43, .08); border-radius: 17px; background: #171916; box-shadow: 0 5px 18px rgba(31, 44, 35, .06); }
 .small-groups-card-image { display: block; width: 100%; height: auto; aspect-ratio: 1920 / 955; object-fit: contain; object-position: center; }
 .small-groups-more-button { display: inline-flex; min-height: 40px; justify-self: end; align-items: center; justify-content: center; gap: 3px; margin: 0 12px 12px; padding: 0 13px 0 15px; border: 1px solid var(--glass-button-border); border-radius: 13px; background: var(--glass-button-surface); color: var(--forest); box-shadow: var(--glass-button-shadow); backdrop-filter: blur(18px) saturate(1.7); -webkit-backdrop-filter: blur(18px) saturate(1.7); cursor: pointer; font-size: 12px; font-weight: 700; white-space: nowrap; transition: background .18s ease, transform .18s ease; }
@@ -215,6 +254,19 @@ body.pastor-sheet-open { overflow: hidden; }
 .pastor-sheet-section p { margin: 0; color: #59655d; font-size: 14px; line-height: 1.65; }
 .pastor-values-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
 .pastor-values-list li { padding: 9px 12px; border: 1px solid #e2e8df; border-radius: 999px; background: #f5f7f3; color: #44554a; font-size: 13px; font-weight: 600; }
+
+/* Shared mobile-first sheet sizing: a centered phone-width column on larger screens. */
+.home-main { max-width: 480px; }
+.pastor-sheet-layer, .gatherings-sheet-layer, .amigotez-sheet-layer, .small-groups-sheet-layer { inset: 0; }
+.pastor-sheet, .gatherings-sheet, .amigotez-sheet, .small-groups-sheet { width: min(100%, 480px); max-height: calc(100dvh - var(--modal-top-gap, 82px)); padding-top: 0; transition: height .3s cubic-bezier(.2, .75, .25, 1); }
+.pastor-sheet[data-state='full'], .gatherings-sheet[data-state='full'], .amigotez-sheet[data-state='full'], .small-groups-sheet[data-state='full'] { height: calc(100dvh - var(--modal-top-gap, 82px)); border-radius: 25px 25px 0 0; }
+.carousel-slides, .youth-polaroid-photo { touch-action: pan-y; user-select: none; }
+.welcome-carousel-copy { pointer-events: none; }
+.small-groups-sheet[data-state='half'] { height: 56dvh; }
+.pastor-sheet-content, .gatherings-sheet-content, .amigotez-sheet-content { min-height: 0; flex: 1 1 auto; overscroll-behavior-y: contain; -webkit-overflow-scrolling: touch; }
+.small-groups-sheet-handle { touch-action: none; }
+.gathering-meeting-list li > span { min-width: 0; }
+.gathering-meeting-list time { flex-shrink: 0; }
 
 .feed-list { display: grid; gap: 14px; }
 .feed-card { overflow: hidden; padding: 17px 18px 13px; border: 1px solid #e7e9e5; border-radius: 17px; background: var(--paper); box-shadow: 0 3px 12px rgba(31, 44, 35, .025); }

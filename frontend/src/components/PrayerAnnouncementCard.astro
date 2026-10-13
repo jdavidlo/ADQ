@@ -1,0 +1,26 @@
+---
+import { getPrayerAnnouncement } from '../services/prayer-announcement.js';
+const announcement = getPrayerAnnouncement();
+---
+
+<article class="prayer-announcement-card" aria-labelledby="prayer-announcement-title">
+  {announcement.image ? (
+    <img
+      class="prayer-announcement-image"
+      src={announcement.image}
+      alt={announcement.imageAlt}
+      loading="lazy"
+      decoding="async"
+    />
+  ) : (
+    <div class="prayer-announcement-image-placeholder" role="img" aria-label={announcement.imageAlt}>
+      <svg viewBox="0 0 48 48" aria-hidden="true">
+        <path d="M24 8v13m-6.5-6.5h13M13 39c2.8-7.2 6.2-10.8 11-10.8S32.2 31.8 35 39M18 24.5l6 4.5 6-4.5" />
+      </svg>
+    </div>
+  )}
+  <div class="prayer-announcement-copy">
+    <h2 id="prayer-announcement-title">{announcement.title}</h2>
+    <p>{announcement.schedule}</p>
+  </div>
+</article>

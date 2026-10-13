@@ -3,10 +3,14 @@ import SiteHeader from '../components/SiteHeader.astro';
 import VerseCard from '../components/VerseCard.astro';
 import WelcomeCarousel from '../components/WelcomeCarousel.astro';
 import GatheringsCard from '../components/GatheringsCard.astro';
+import PrayerAnnouncementCard from '../components/PrayerAnnouncementCard.astro';
+import YouthAnnouncementCard from '../components/YouthAnnouncementCard.astro';
+import WomenAnnouncementCard from '../components/WomenAnnouncementCard.astro';
+import MenAnnouncementCard from '../components/MenAnnouncementCard.astro';
+import CollegeAnnouncementCard from '../components/CollegeAnnouncementCard.astro';
 import PastorsCard from '../components/PastorsCard.astro';
 import SmallGroupsCard from '../components/SmallGroupsCard.astro';
 import AmigotezCard from '../components/AmigotezCard.astro';
-import FeedCard from '../components/FeedCard.astro';
 import BottomDock from '../components/BottomDock.astro';
 import { getHomeContent } from '../services/daily-verse.js';
 import '../styles/global.css';
@@ -28,13 +32,15 @@ const homeContent = getHomeContent();
       <h1 class="sr-only">Inicio de ADQ</h1>
       {homeContent.type === 'daily-verse' && <VerseCard verse={homeContent.verse} />}
       <WelcomeCarousel />
-      <GatheringsCard />
       <PastorsCard />
+      <GatheringsCard />
+      <PrayerAnnouncementCard />
       <SmallGroupsCard />
+      <YouthAnnouncementCard />
+      <MenAnnouncementCard />
+      <WomenAnnouncementCard />
       <AmigotezCard />
-      <section class="feed-list" id="contenido" aria-label="Tarjetas de contenido">
-        {Array.from({ length: 5 }, (_, index) => <FeedCard index={index + 1} />)}
-      </section>
+      <CollegeAnnouncementCard />
     </main>
     <BottomDock />
 
@@ -123,12 +129,11 @@ const homeContent = getHomeContent();
           dock.classList.remove('is-compact');
           previousY = currentY;
         } else {
-          const direction = getScrollDirection(previousY, currentY);
+          const direction = getScrollDirection(previousY, currentY, 0);
           const state = getChromeState(direction);
           if (state) {
             header.classList.toggle('is-hidden', !state.headerVisible);
             dock.classList.toggle('is-compact', state.dockCompact);
-            if (!state.headerVisible) closeMenu();
             previousY = currentY;
           }
         }

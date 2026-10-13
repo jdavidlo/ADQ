@@ -31,6 +31,7 @@ const slideCount = 3;
 
 <script>
   import { getNextCarouselIndex } from '../scripts/carousel.js';
+  import { bindCarouselGestures } from '../scripts/carousel-gestures.js';
 
   document.querySelectorAll('[data-welcome-carousel]').forEach((carousel) => {
     const slides = [...carousel.querySelectorAll('.carousel-slide')];
@@ -78,6 +79,10 @@ const slideCount = 3;
         hasFocus = false;
         startAutoPlay();
       }
+    });
+    bindCarouselGestures(carousel.querySelector('[data-carousel-slides]'), (direction) => {
+      showSlide(getNextCarouselIndex(currentIndex, slides.length, direction));
+      startAutoPlay();
     });
     reducedMotion.addEventListener('change', startAutoPlay);
     startAutoPlay();

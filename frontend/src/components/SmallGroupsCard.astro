@@ -60,6 +60,7 @@ const smallGroups = getSmallGroups();
 
 <script>
   import { getSmallGroupsSheetState } from '../scripts/small-groups-sheet.js';
+  import { bindSheetGestures } from '../scripts/sheet-gestures.js';
 
   const layer = document.querySelector('[data-small-groups-sheet-layer]');
   const sheet = document.querySelector('[data-small-groups-sheet]');
@@ -98,6 +99,10 @@ const smallGroups = getSmallGroups();
     window.requestAnimationFrame(() => closeHandle.focus());
   });
 
+  bindSheetGestures(sheet, () => state, (action) => {
+    if (action === 'close') closeSheet();
+    else renderState(action);
+  });
   closeHandle?.addEventListener('click', closeSheet);
   backdrop?.addEventListener('click', closeSheet);
   document.addEventListener('keydown', (event) => {

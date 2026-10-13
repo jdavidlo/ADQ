@@ -1,0 +1,106 @@
+---
+import { getYouthAnnouncement } from '../services/youth-announcement.js';
+const announcement = getYouthAnnouncement();
+---
+
+<article class="youth-polaroid-card" aria-labelledby="youth-polaroid-title" data-youth-carousel>
+  <h2 id="youth-polaroid-title" class="youth-polaroid-title">{announcement.title}</h2>
+  <div class="youth-polaroid-photo" role="region" aria-roledescription="carrusel" aria-label="Fotos del grupo de jóvenes">
+    {announcement.images.map((image, index) => (
+      <div
+        class:list={["youth-carousel-slide", { "is-active": index === 0 }]}
+        data-youth-slide
+        aria-hidden={index !== 0}
+        role="group"
+        aria-roledescription="imagen"
+        aria-label={`Imagen ${index + 1} de ${announcement.images.length}`}
+      >
+        {image.src ? (
+          <img class="youth-carousel-image" src={image.src} alt={image.alt} loading="lazy" decoding="async" />
+        ) : (
+          <div class="youth-carousel-image-placeholder" role="img" aria-label={image.alt}>
+            <svg viewBox="0 0 48 48" aria-hidden="true">
+              <circle cx="18" cy="16" r="5" />
+              <circle cx="31" cy="18" r="4" />
+              <path d="M8 39c1-8 4-12 10-12s9 4 10 12m-1-9c1-3 3-5 6-5 5 0 7 4 8 11" />
+            </svg>
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+  <footer class="youth-polaroid-footer">
+    <span class="youth-polaroid-day">{announcement.day}</span>
+    <div class="youth-carousel-pagination" role="group" aria-label="Seleccionar foto">
+      {announcement.images.map((_, index) => (
+        <button
+          class:list={["youth-carousel-dot", { "is-active": index === 0 }]}
+          type="button"
+          aria-label={`Mostrar foto ${index + 1}`}
+          aria-pressed={index === 0 ? 'true' : 'false'}
+          data-youth-dot={index}
+        ></button>
+      ))}
+    </div>
+    <time class="youth-polaroid-time" datetime="20:00">{announcement.time}</time>
+  </footer>
+</article>
+
+<script>
+  import { getNextCarouselIndex } from '../scripts/carousel.js';
+  import { bindCarouselGestures } from '../scripts/carousel-gestures.js';
+
+  document.querySelectorAll('[data-youth-carousel]').forEach((carousel) => {
+    const slides = [...carousel.querySelectorAll('[data-youth-slide]')];
+    const dots = [...carousel.querySelectorAll('[data-youth-dot]')];
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let currentIndex = 0;
+    let timer;
+    let isHovered = false;
+    let hasFocus = false;
+
+    const showSlide = (index) => {
+      currentIndex = index;
+      slides.forEach((slide, slideIndex) => {
+        const active = slideIndex === currentIndex;
+        slide.classList.toggle('is-active', active);
+        slide.setAttribute('aria-hidden', String(!active));
+      });
+      dots.forEach((dot, dotIndex) => {
+        const active = dotIndex === currentIndex;
+        dot.classList.toggle('is-active', active);
+        dot.setAttribute('aria-pressed', String(active));
+      });
+    };
+
+    const stopAutoPlay = () => window.clearInterval(timer);
+    const startAutoPlay = () => {
+      stopAutoPlay();
+      if (!reducedMotion.matches && !isHovered && !hasFocus && slides.length > 1) {
+        timer = window.setInterval(() => {
+          showSlide(getNextCarouselIndex(currentIndex, slides.length, 1));
+        }, 5000);
+      }
+    };
+
+    dots.forEach((dot) => dot.addEventListener('click', () => {
+      showSlide(Number(dot.dataset.youthDot));
+      startAutoPlay();
+    }));
+    carousel.addEventListener('mouseenter', () => { isHovered = true; stopAutoPlay(); });
+    carousel.addEventListener('mouseleave', () => { isHovered = false; startAutoPlay(); });
+    carousel.addEventListener('focusin', () => { hasFocus = true; stopAutoPlay(); });
+    carousel.addEventListener('focusout', (event) => {
+      if (!carousel.contains(event.relatedTarget)) {
+        hasFocus = false;
+        startAutoPlay();
+      }
+    });
+    bindCarouselGestures(carousel.querySelector('.youth-polaroid-photo'), (direction) => {
+      showSlide(getNextCarouselIndex(currentIndex, slides.length, direction));
+      startAutoPlay();
+    });
+    reducedMotion.addEventListener('change', startAutoPlay);
+    startAutoPlay();
+  });
+</script>

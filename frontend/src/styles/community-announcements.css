@@ -1,0 +1,33 @@
+/* Three independent mobile-first layouts; shared spacing and palette. */
+.women-editorial, .men-invitation, .college-admissions { min-width: 0; color: #243d30; }
+.community-eyebrow { display: block; margin: 0; font-size: 10px; font-weight: 700; letter-spacing: .09em; line-height: 1.5; text-transform: uppercase; }
+.community-photo-placeholder { display: grid; place-items: center; width: 100%; height: 100%; background: #e0e3df; color: #657268; font-size: 10px; }
+.women-editorial { margin-block: 16px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .76fr); gap: 18px 14px; padding: 24px 18px 14px; border-top: 1px solid #d8dfd6; border-bottom: 1px solid #d8dfd6; }
+.women-editorial-copy { align-self: center; }
+.women-editorial-copy h2 { margin: 10px 0 12px; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(24px, 7vw, 34px); font-weight: 400; line-height: 1.08; letter-spacing: -.035em; }
+.women-editorial-copy p { margin: 0; color: #5b685e; font-size: 12px; line-height: 1.6; }
+.women-editorial-photo { min-width: 0; min-height: 200px; overflow: hidden; border-radius: 100px 100px 6px 6px; }
+.women-editorial-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.women-editorial-schedule { grid-column: 1 / -1; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px 12px; margin: 0; padding-top: 12px; border-top: 1px solid #d8dfd6; font-size: 12px; font-weight: 700; }
+.men-invitation { margin-bottom: 16px; padding: 26px 22px 18px; border-radius: 12px; background: #294436; color: #f7f8f4; }
+.men-invitation h2 { max-width: 290px; margin: 0; font-size: clamp(28px, 8vw, 36px); font-weight: 750; line-height: 1.08; letter-spacing: -.035em; }
+.men-invitation-description { max-width: 310px; margin: 14px 0 22px; color: #dde5dc; font-size: 13px; line-height: 1.6; }
+.men-invitation-schedule { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; padding-top: 14px; border-top: 1px solid #657d6a; font-size: 13px; font-weight: 700; }
+.college-admissions { padding: 20px; border: 1px solid #d8dfd6; border-radius: 16px; background: #eaf0e5; }
+
+.college-admissions-identity { display: grid; grid-template-columns: minmax(0, 1fr) 76px; gap: 16px; align-items: center; }
+.college-admissions-logo { display: grid; place-items: center; width: 76px; min-height: 76px; justify-self: end; }
+.college-admissions-logo img { display: block; width: 100%; max-height: 90px; object-fit: contain; }
+.college-logo-placeholder { display: grid; place-items: center; width: 76px; height: 76px; border: 1px dashed #a9b9a2; border-radius: 8px; color: #657268; font-size: 12px; }
+.college-admissions-copy h2 { margin: 0 0 8px; font-size: clamp(20px, 5.6vw, 26px); line-height: 1.12; letter-spacing: -.025em; }
+.college-admissions-description { margin: 0; color: #53654f; font-size: 12px; line-height: 1.5; }
+.college-admissions-cta { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 46px; margin-top: 18px; padding: 12px 14px; border-radius: 10px; background: #294a35; color: #fff; font-size: 13px; font-weight: 700; text-decoration: none; }
+.college-admissions a:focus-visible { outline: 3px solid #375e42; outline-offset: 4px; }
+@media (max-width: 340px) {
+  .women-editorial { padding-inline: 12px; gap: 14px 10px; }
+  .men-invitation { padding-inline: 18px; }
+  .college-admissions { padding: 16px; }
+  .college-admissions-identity { grid-template-columns: minmax(0, 1fr) 60px; gap: 12px; }
+  .college-admissions-logo, .college-logo-placeholder { width: 60px; min-height: 60px; }
+  .college-logo-placeholder { height: 60px; }
+}

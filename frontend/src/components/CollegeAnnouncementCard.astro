@@ -1,0 +1,17 @@
+---
+import { getCollegeAnnouncement } from '../services/community-announcements.js';
+import '../styles/community-announcements.css';
+const college = getCollegeAnnouncement();
+---
+<article class="college-admissions" aria-labelledby="college-announcement-title">
+  <div class="college-admissions-identity">
+    <div class="college-admissions-copy">
+      <h2 id="college-announcement-title">{college.name}</h2>
+      <p class="college-admissions-description">{college.description}</p>
+    </div>
+    <div class="college-admissions-logo">
+      {college.logo ? <img src={college.logo} alt={`Logo de ${college.name}`} loading="lazy" decoding="async" /> : <span class="college-logo-placeholder" aria-label="Espacio reservado para el logo del colegio">Logo</span>}
+    </div>
+  </div>
+  <a class="college-admissions-cta" href={college.contactUrl} target="_blank" rel="noopener noreferrer">{college.contactLabel}<span aria-hidden="true">&gt;</span><span class="sr-only"> (abre en una pestaña nueva)</span></a>
+</article>
