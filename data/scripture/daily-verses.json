@@ -1,7 +1,11 @@
 {
-  "mode": "daily-verse",
+  "mode": "live-sermon",
   "translation": "NVI",
   "liveSermon": {
+    "preview": "live-title",
+    "isLive": false,
+    "preacher": "Pastor Alberto",
+    "title": "Una fe que permanece",
     "outlineUrl": null
   },
   "verses": [

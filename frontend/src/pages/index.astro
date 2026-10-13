@@ -1,6 +1,7 @@
 ---
 import SiteHeader from '../components/SiteHeader.astro';
 import VerseCard from '../components/VerseCard.astro';
+import SermonCard from '../components/SermonCard.astro';
 import WelcomeCarousel from '../components/WelcomeCarousel.astro';
 import GatheringsCard from '../components/GatheringsCard.astro';
 import PrayerAnnouncementCard from '../components/PrayerAnnouncementCard.astro';
@@ -31,6 +32,7 @@ const homeContent = getHomeContent();
     <main class="home-main">
       <h1 class="sr-only">Inicio de ADQ</h1>
       {homeContent.type === 'daily-verse' && <VerseCard verse={homeContent.verse} />}
+      {homeContent.type === 'live-sermon' && <SermonCard sermon={homeContent.sermon} />}
       <WelcomeCarousel />
       <PastorsCard />
       <GatheringsCard />

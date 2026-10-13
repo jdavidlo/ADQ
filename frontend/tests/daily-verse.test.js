@@ -34,22 +34,24 @@ test('returns the configured NVI verse for daily-verse mode', () => {
   assert.equal(content.verse.reference, 'Salmo 23:1');
 });
 
-test('returns only outline routing data in live-sermon mode', () => {
+test('returns the sermon view model in live-sermon mode', () => {
   const content = getHomeContent({
     mode: 'live-sermon',
     translation: 'NVI',
     verses: [{ reference: 'Salmo 23:1', text: 'El Señor es mi pastor, nada me falta.' }],
-    liveSermon: { outlineUrl: '/bosquejo/en-vivo' },
+    liveSermon: { outlineUrl: 'https://docs.google.com/document/d/sample/view', isLive: true, preacher: 'Pastor Alberto' },
   });
 
-  assert.deepEqual(content, { type: 'live-sermon', outlineUrl: '/bosquejo/en-vivo' });
+  assert.equal(content.type, 'live-sermon');
+  assert.equal(content.outlineUrl, 'https://docs.google.com/document/d/sample/view');
+  assert.equal(content.sermon.preacher, 'Pastor Alberto');
+  assert.equal(content.sermon.isLive, true);
+  assert.equal(content.sermon.title, null);
 });
 
 test('uses NVI in the configured home verse mode', () => {
-  const content = getHomeContent(undefined, new Date(2026, 0, 1));
-
-  assert.equal(content.type, 'daily-verse');
-  assert.equal(content.verse.translation, 'NVI');
+  const verse = getDailyVerse(undefined, new Date(2026, 0, 1));
+  assert.equal(verse.translation, 'NVI');
 });
 
 test('rejects an empty verse collection', () => {

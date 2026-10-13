@@ -1,5 +1,8 @@
 import dailyVerseData from '../../../data/scripture/daily-verses.json' with { type: 'json' };
 
+import { getSermonCard } from './sermon-card.js';
+import { getHomeContentMode } from './home-content-modes.js';
+
 const DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
 
 export function getDayOfYear(date) {
@@ -22,12 +25,10 @@ export function getDailyVerse(
 }
 
 export function getHomeContent(data = dailyVerseData, date = new Date()) {
-  if (data.mode === 'live-sermon') {
-    return { type: 'live-sermon', outlineUrl: data.liveSermon?.outlineUrl ?? null };
-  }
-
-  if (data.mode !== 'daily-verse') {
-    throw new RangeError(`Unsupported home content mode: ${data.mode}`);
+  const mode = getHomeContentMode(data.mode);
+  if (mode.type === 'live-sermon') {
+    const sermon = getSermonCard(data.liveSermon);
+    return { type: 'live-sermon', outlineUrl: sermon.outlineUrl, sermon };
   }
 
   return {

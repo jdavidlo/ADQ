@@ -4,7 +4,25 @@ Esta carpeta contendrá los datos simulados usados durante la primera fase del f
 
 Los componentes de interfaz no deben importar directamente estos archivos. El frontend debe acceder a ellos mediante la capa de servicios/repositorios de `frontend/src/services/`, de manera que posteriormente se pueda conectar una API sin reescribir la UI.
 
-Por ahora existe `scripture/daily-verses.json`. Su campo `mode` admite `daily-verse` o `live-sermon`; con el modo diario, `frontend/src/services/daily-verse.js` elige uno de los versículos de muestra NVI por fecha local. Para probar el estado de predicación, cambia `mode` a `live-sermon` y define `liveSermon.outlineUrl` cuando exista la ruta real. En ese modo la pantalla omite la tarjeta del versículo y el servicio devuelve la URL para una futura interfaz; por ahora no se muestra ningún aviso ni enlace de live.
+## Versículo y tarjeta de prédica
+
+`scripture/daily-verses.json` se consume mediante `frontend/src/services/daily-verse.js`. `mode: "daily-verse"` conserva el versículo NVI; `mode: "live-sermon"` muestra `SermonCard.astro` en su lugar. No existe todavía cambio automático por horario ni conexión con Drive/Go.
+
+El catálogo `data/catalogs/home-content-modes.json` define los modos y las variantes de prueba, cada uno con su descripción. `frontend/src/services/home-content-modes.js` lo consume y lo usan los servicios de versículo y prédica para resolver/validar la configuración; no es solo documentación ni un bloque de comentarios. La selección activa sigue en `scripture/daily-verses.json`.
+
+Dentro de `liveSermon`, cambiar **una sola bandera** `preview` para probar:
+
+| `preview` | Variante |
+| --- | --- |
+| `"live-title"` | En vivo, título y nombre |
+| `"live-name"` | En vivo, solo nombre |
+| `"available-title"` | Mensaje disponible, título y nombre |
+| `"available-name"` | Mensaje disponible, solo nombre |
+| `null` | Datos reales: respeta `isLive`, `title`, `preacher` y `outlineUrl` |
+
+La configuración actual es `live-title` para visualizar el diseño. El nombre y título son datos de muestra. Las banderas de simulación no muestran etiquetas de prueba en la tarjeta. Si `outlineUrl` es `null`, el botón permanece inactivo, sin aviso visible de enlace pendiente; conserva una etiqueta accesible que indica que el documento no está disponible. No se inventa un documento público. Para volver al versículo, cambiar `mode` a `daily-verse`.
+
+El contrato previsto para la API usa `isLive` (booleano), `preacher` (nombre opcional), `title` (título opcional) y `outlineUrl` (enlace HTTPS de `docs.google.com` o `drive.google.com`, o `null`). Desactivar `preview` al conectar datos reales. `frontend/src/services/sermon-card.js` normaliza ese objeto; cuando no hay título, el nombre ocupa el encabezado, sin espacios vacíos. Si no hay nombre ni título, muestra “Mensaje de la reunión”. Sin enlace ni directo, el estado real es “Mensaje”, no “Mensaje disponible”. Go podrá obtener el título del nombre del archivo; el predicador requiere un campo explícito o una convención acordada. Las credenciales de Google nunca van en el frontend.
 
 La tarjeta de reuniones usa `home/gatherings.json`, donde `sunday.meetings` contiene una lista de reuniones con `name` y `time`; `additional` sigue el mismo formato y agrega `day`. La ubicación y el contacto se consultan mediante `frontend/src/services/gatherings.js`. Mientras `location.googleMapsUrl` sea `null`, la URL de Maps se genera a partir de `location.address`; el domicilio actual es ficticio y solo sirve como ejemplo. Al sustituir los datos, actualiza dirección y enlace si se dispone del destino real, establece `isSample` de nivel superior y `location.isSample` a `false`, y `contact.isSample` a `false` para habilitar los enlaces `tel:` / `mailto:`. Las etiquetas de muestra no se muestran en pantalla; los datos actuales no son información real. La tarjeta de Grupos Pequeños usa `home/small-groups.json` para el título y la URL que se carga dentro del modal. El iframe se crea solo cuando se abre el modal para no cargar otro sitio junto con la pantalla inicial. La imagen local está en `frontend/src/img/`; reemplázala desde esa carpeta cuando cambie la temporada o el diseño. El contenido, filtros e inscripciones siguen siendo responsabilidad de `https://grupospequenos.adq.mx/`; si se extraen componentes o una API del proyecto original, se puede sustituir el iframe más adelante sin cambiar la tarjeta.
 

@@ -1,0 +1,44 @@
+{
+  "modes": [
+    {
+      "value": "daily-verse",
+      "type": "daily-verse",
+      "description": "Muestra el versículo del día."
+    },
+    {
+      "value": "live-sermon",
+      "type": "live-sermon",
+      "description": "Muestra la tarjeta de prédica. No activa horarios automáticos."
+    }
+  ],
+  "sermonPreviews": [
+    {
+      "value": null,
+      "description": "Sin simulación: respeta isLive, preacher, title y outlineUrl."
+    },
+    {
+      "value": "live-title",
+      "isLive": true,
+      "showTitle": true,
+      "description": "En vivo, con título y nombre de quien predica."
+    },
+    {
+      "value": "live-name",
+      "isLive": true,
+      "showTitle": false,
+      "description": "En vivo, solo nombre de quien predica."
+    },
+    {
+      "value": "available-title",
+      "isLive": false,
+      "showTitle": true,
+      "description": "Mensaje disponible fuera de vivo, con título y nombre."
+    },
+    {
+      "value": "available-name",
+      "isLive": false,
+      "showTitle": false,
+      "description": "Mensaje disponible fuera de vivo, solo nombre."
+    }
+  ]
+}
