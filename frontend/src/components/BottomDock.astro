@@ -1,16 +1,22 @@
 ---
+import { getLiveContent } from '../services/live.js';
+import '../styles/live.css';
+const { active = 'home', live = getLiveContent() } = Astro.props;
 const items = [
-  { id: 'home', label: 'Menú', icon: 'home' },
-  { id: 'live', label: 'Live', icon: 'live' },
+  { id: 'home', label: 'Menú', icon: 'home', href: '/' },
+  { id: 'live', label: 'Live', icon: 'live', href: '/live/' },
   { id: 'donativos', label: 'Donativos', icon: 'heart' },
-  { id: 'informacion', label: 'Información', icon: 'info' },
-  { id: 'usuario', label: 'Usuario', icon: 'user' },
+  { id: 'informacion', label: 'Información', icon: 'info', href: '/informacion/' },
+  { id: 'usuario', label: 'Usuario', icon: 'user', href: '/usuario/' },
 ];
 ---
 
 <nav class="bottom-dock" aria-label="Navegación principal" data-bottom-dock>
-  {items.map((item) => (
-    <button class="dock-item" type="button" aria-pressed={item.id === 'home' ? 'true' : 'false'} data-dock-choice={item.id}>
+  {items.map((item) => {
+    const Tag = item.href ? 'a' : 'button';
+    const broadcasting = item.id === 'live' && live.dockPulse;
+    return (
+    <Tag class="dock-item" class:list={{ 'dock-live-on': broadcasting }} href={item.href} type={item.href ? undefined : 'button'} aria-current={item.href && item.id === active ? 'page' : undefined} aria-pressed={item.href ? undefined : 'false'} aria-label={broadcasting ? 'Live: en vivo' : item.label} data-dock-choice={item.id}>
       <span class="dock-icon" aria-hidden="true">
         {item.icon === 'home' && <svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V10Z"></path></svg>}
         {item.icon === 'live' && <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.2"></circle><path d="M7.8 7.8a6 6 0 0 0 0 8.4M16.2 7.8a6 6 0 0 1 0 8.4M4.9 4.9a10 10 0 0 0 0 14.2M19.1 4.9a10 10 0 0 1 0 14.2"></path></svg>}
@@ -19,6 +25,6 @@ const items = [
         {item.icon === 'user' && <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.5 21a7.5 7.5 0 0 1 15 0"></path></svg>}
       </span>
       <span class="dock-label">{item.label}</span>
-    </button>
-  ))}
+    </Tag>
+  );})}
 </nav>

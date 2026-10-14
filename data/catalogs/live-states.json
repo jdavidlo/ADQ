@@ -1,0 +1,34 @@
+{
+  "states": [
+    {
+      "value": "live",
+      "description": "YouTube tiene una transmisión activa. Reproducir el video e indicar en vivo en el dock.",
+      "label": "En vivo",
+      "isLive": true,
+      "showPlayer": true,
+      "showSchedule": false,
+      "dockColor": "red",
+      "dockPulse": true
+    },
+    {
+      "value": "offline",
+      "description": "Se confirmó que YouTube no tiene transmisión activa. Mostrar el mensaje y los horarios confirmados.",
+      "label": "No estamos transmitiendo en este momento",
+      "isLive": false,
+      "showPlayer": false,
+      "showSchedule": true,
+      "dockColor": "default",
+      "dockPulse": false
+    },
+    {
+      "value": "unknown",
+      "description": "La consulta falló o aún no existe un estado verificable. No presentarlo como fuera de vivo.",
+      "label": "No pudimos consultar la transmisión",
+      "isLive": false,
+      "showPlayer": false,
+      "showSchedule": true,
+      "dockColor": "default",
+      "dockPulse": false
+    }
+  ]
+}

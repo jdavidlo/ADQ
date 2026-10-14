@@ -1,0 +1,72 @@
+---
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteBehavior from '../components/SiteBehavior.astro';
+import BottomDock from '../components/BottomDock.astro';
+import { getInformation } from '../services/information.js';
+import '../styles/global.css';
+import '../styles/information.css';
+const info = getInformation();
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="¿Buscas una iglesia cristiana en Querétaro? Conoce Amistad de Querétaro y consulta las reuniones de domingo para tu primera visita." />
+    <meta name="theme-color" content="#f3f4f0" />
+    <title>Visítanos y conoce Amistad de Querétaro</title>
+  </head>
+  <body>
+    <SiteHeader />
+    <main class="home-main information-main">
+      <header class="information-intro">
+        <p class="information-eyebrow">Amistad de Querétaro</p>
+        <span class="information-spark" aria-hidden="true">✳</span>
+        <h1>{info.heading}<span class="information-heading-accent">{info.headingAccent}</span></h1>
+        <p>{info.intro}</p>
+        <a class="information-jump" href="#visitanos">Quiero conocerlos <span aria-hidden="true">↘</span></a>
+      </header>
+
+      <section class="information-about" aria-labelledby="about-title">
+        <h2 id="about-title">{info.about.title}</h2>
+        <p>{info.about.description}</p>
+      </section>
+
+      <section id="visitanos" class="information-section information-sunday" aria-labelledby="visit-title">
+        <p class="information-eyebrow">Tu primera visita</p>
+        <h2 id="visit-title">{info.visit.title}</h2>
+        <p>{info.visit.description}</p>
+        <ul id="horarios" class="information-schedules" aria-label="Reuniones de domingo">
+          {info.sunday.meetings.map(meeting => <li><span>{meeting.name}</span><strong>{meeting.time}</strong></li>)}
+        </ul>
+        {info.location?.address && <div class="information-location">
+          <p>{info.location.address}</p>
+          {info.location.mapUrl && <a class="information-text-link" href={info.location.mapUrl} target="_blank" rel="noopener noreferrer">Cómo llegar <span aria-hidden="true">↗</span></a>}
+        </div>}
+      </section>
+
+      <section class="information-section information-faq" aria-labelledby="faq-title">
+        <p class="information-eyebrow">Sin complicaciones</p>
+        <h2 id="faq-title">Lo esencial.</h2>
+        <dl class="information-questions">
+          {info.faqs.map(item => <div class="information-question">
+            <dt>{item.question}</dt>
+            <dd>{item.answer}</dd>
+          </div>)}
+        </dl>
+      </section>
+
+      <section id="contacto" class="information-section information-contact" aria-labelledby="contact-title">
+        <svg class="information-contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5H12a9 9 0 0 1-4-.9L3 21l1.9-5a9 9 0 0 1-.9-4v-.5A8.5 8.5 0 0 1 12.5 3h.5a8.5 8.5 0 0 1 8 8.5Z"/><path d="M8 11.5h8M8 8.5h5"/></svg>
+        <h2 id="contact-title">{info.contactInvitation.title}</h2>
+        <p>{info.contactInvitation.description}</p>
+        {info.whatsappUrl ? <a class="information-whatsapp" href={info.whatsappUrl} target="_blank" rel="noopener noreferrer">{info.contactInvitation.label} <span aria-hidden="true">↗</span></a>
+          : <button class="information-whatsapp" type="button" disabled aria-label="WhatsApp de muestra, contacto no habilitado">{info.contactInvitation.label} <span aria-hidden="true">↗</span></button>}
+        {info.whatsapp?.isSample && <p class="information-sample">Número de muestra · {info.whatsapp.displayNumber}</p>}
+      </section>
+      <footer class="information-footer"><p>Amistad de Querétaro</p></footer>
+    </main>
+    <BottomDock active="informacion" />
+    <SiteBehavior />
+  </body>
+</html>

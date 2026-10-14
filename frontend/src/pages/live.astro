@@ -1,0 +1,25 @@
+---
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteBehavior from '../components/SiteBehavior.astro';
+import BottomDock from '../components/BottomDock.astro';
+import LiveScreen from '../components/LiveScreen.astro';
+import { getLiveContent } from '../services/live.js';
+import '../styles/global.css';
+const live = getLiveContent();
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Acompaña las transmisiones de Amistad de Querétaro y consulta nuestros horarios." />
+    <meta name="theme-color" content="#f3f4f0" />
+    <title>ADQ — Live</title>
+  </head>
+  <body>
+    <SiteHeader />
+    <main class="home-main live-main"><LiveScreen live={live} /></main>
+    <BottomDock active="live" live={live} />
+    <SiteBehavior />
+  </body>
+</html>

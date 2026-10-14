@@ -1,0 +1,45 @@
+{
+  "heading": "Tu espacio.",
+  "intro": "Lee. Conecta. Sirve.",
+  "weeklyPlan": {
+    "title": "Plan de lectura",
+    "subtitle": "Esta semana",
+    "caption": "Un momento para la Palabra, cada día.",
+    "image": {
+      "src": null,
+      "alt": "Plan de lectura bíblica de la semana"
+    }
+  },
+  "areas": [
+    {
+      "id": "multimedia",
+      "name": "Multimedia",
+      "description": "Recursos para el equipo de multimedia.",
+      "resources": []
+    },
+    {
+      "id": "edecanes",
+      "name": "Edecanes",
+      "description": "Recursos para el equipo de edecanes.",
+      "resources": []
+    },
+    {
+      "id": "alabanza",
+      "name": "Alabanza",
+      "description": "Recursos para el equipo de alabanza.",
+      "resources": []
+    },
+    {
+      "id": "limpieza",
+      "name": "Limpieza",
+      "description": "Recursos para el equipo de limpieza.",
+      "resources": []
+    },
+    {
+      "id": "transmision",
+      "name": "Transmisión",
+      "description": "Recursos para el equipo de transmisión.",
+      "resources": []
+    }
+  ]
+}

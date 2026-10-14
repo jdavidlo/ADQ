@@ -1,0 +1,39 @@
+{
+  "heading": "Tu próximo paso.",
+  "intro": "Conoce a Cristo. Encuentra comunidad. Somos Amistad de Querétaro, una iglesia cristiana.",
+  "about": {
+    "title": "Ven como eres.",
+    "description": "Ya conoces a Cristo o apenas estás explorando tu fe: queremos conocerte."
+  },
+  "visit": {
+    "title": "Nos vemos el domingo.",
+    "description": "Dos reuniones. Un domingo para conocernos."
+  },
+  "faqs": [
+    {
+      "question": "¿Apenas conoces a Cristo?",
+      "answer": "Puedes empezar con tus preguntas. Conoce nuestra comunidad y explora tu fe."
+    },
+    {
+      "question": "¿Qué es Amistad?",
+      "answer": "Una congregación cristiana en Querétaro."
+    },
+    {
+      "question": "¿Buscas comunidad?",
+      "answer": "Conócenos el domingo. Descubre también los Grupos Pequeños en Inicio."
+    }
+  ],
+  "contactInvitation": {
+    "title": "¿Hablamos?",
+    "description": "Resuelve tus dudas antes de venir.",
+    "label": "Hablemos por WhatsApp"
+  },
+  "whatsapp": {
+    "number": "524420000000",
+    "displayNumber": "+52 442 000 0000",
+    "confirmed": false,
+    "isSample": true,
+    "message": "Hola, me gustaría conocer Amistad y planear mi primera visita."
+  },
+  "headingAccent": "Empieza aquí."
+}

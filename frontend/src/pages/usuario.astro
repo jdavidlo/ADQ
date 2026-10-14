@@ -1,0 +1,63 @@
+---
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteBehavior from '../components/SiteBehavior.astro';
+import BottomDock from '../components/BottomDock.astro';
+import ResourceIcon from '../components/ResourceIcon.astro';
+import ArrowIcon from '../components/ArrowIcon.astro';
+import { getUserResources } from '../services/user-resources.js';
+import '../styles/global.css';
+import '../styles/user-resources.css';
+const data = getUserResources();
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Encuentra el plan de lectura semanal y los recursos de las áreas de servicio de Amistad de Querétaro." />
+    <meta name="theme-color" content="#f3f4f0" />
+    <title>Tu espacio — Recursos de Amistad de Querétaro</title>
+  </head>
+  <body>
+    <SiteHeader />
+    <main class="home-main user-resources-main">
+      <header class="user-resources-heading">
+        <div><p class="user-resources-eyebrow">Comunidad ADQ</p><h1>{data.heading}</h1><p>{data.intro}</p></div>
+        <span class="user-resources-stamp" aria-hidden="true">✳</span>
+      </header>
+      <article class="weekly-plan-post" aria-labelledby="weekly-plan-title">
+        <header class="weekly-plan-header">
+          <span class="weekly-plan-avatar" aria-hidden="true"><ResourceIcon /></span>
+          <div><h2 id="weekly-plan-title">{data.weeklyPlan.title}</h2><p>Amistad de Querétaro <span aria-hidden="true">·</span> {data.weeklyPlan.subtitle}</p></div>
+        </header>
+        <div class="weekly-plan-media">
+          {data.weeklyPlan.image.src ? <img src={data.weeklyPlan.image.src} alt={data.weeklyPlan.image.alt} decoding="async" />
+            : <div class="weekly-plan-placeholder" role="img" aria-label="Espacio reservado para la imagen del plan de lectura semanal">
+              <ResourceIcon kind="image" /><span>Imagen del plan semanal</span><small>Espacio reservado</small>
+            </div>}
+        </div>
+        <footer class="weekly-plan-footer">
+          <p>{data.weeklyPlan.caption}</p>
+          {data.weeklyPlan.image.src ? <a class="weekly-plan-open" href={data.weeklyPlan.image.src} target="_blank" rel="noopener noreferrer" aria-label="Abrir imagen completa del plan de lectura"><ArrowIcon /></a>
+            : <button class="weekly-plan-open" type="button" disabled aria-label="Imagen del plan de lectura aún no disponible"><ArrowIcon /></button>}
+        </footer>
+      </article>
+      <section class="service-areas" aria-labelledby="service-areas-title">
+        <header class="service-areas-heading"><div><p class="user-resources-eyebrow">Hacemos comunidad</p><h2 id="service-areas-title">Áreas de servicio</h2></div><span class="service-areas-mark"><ArrowIcon direction="down-left" /></span></header>
+        <p class="service-areas-intro">Encuentra los recursos de tu equipo.</p>
+        <div class="service-areas-list">
+          {data.areas.map(area => <details class="service-area" data-area-id={area.id}>
+            <summary><span class="service-area-icon" data-tone={area.id}><ResourceIcon kind={area.id} /></span><span class="service-area-name">{area.name}</span><span class="service-area-arrow"><ArrowIcon direction="right" /></span></summary>
+            <div class="service-area-content">
+              <p>{area.description}</p>
+              {area.resources.length ? <ul>{area.resources.map(resource => <li><a href={resource.url} target="_blank" rel="noopener noreferrer">{resource.title}<ArrowIcon /></a></li>)}</ul>
+                : <p class="service-area-empty">Aún no hay recursos publicados.</p>}
+            </div>
+          </details>)}
+        </div>
+      </section>
+    </main>
+    <BottomDock active="usuario" />
+    <SiteBehavior />
+  </body>
+</html>

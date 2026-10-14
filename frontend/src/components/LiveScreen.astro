@@ -1,0 +1,42 @@
+---
+import { getGatherings } from '../services/gatherings.js';
+import '../styles/live.css';
+const { live } = Astro.props;
+const gatherings = getGatherings();
+---
+<section class="live-screen" aria-labelledby="live-title" data-live-status={live.status}>
+  <div class="live-screen-heading">
+    <h1 id="live-title">Acompáñanos desde donde estés.</h1>
+  </div>
+  {live.isLive ? (
+    <section class="live-broadcast" aria-label="Transmisión de YouTube">
+      <p class="live-status live-status-on"><span aria-hidden="true"></span>En vivo</p>
+      <div class="live-player">
+        {live.youtubeEmbedUrl ? <iframe src={live.youtubeEmbedUrl} title={live.video.title || 'Transmisión de Amistad de Querétaro en YouTube'} allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe> : <p>El video aún no está disponible aquí. Puedes consultar el canal de YouTube.</p>}
+      </div>
+      {live.video.title && <h2 class="live-video-title">{live.video.title}</h2>}
+    </section>
+  ) : (
+    <section class="live-empty" aria-labelledby="live-empty-title">
+      <svg class="live-empty-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="13" rx="3" /><path d="m10 9 5 3-5 3V9ZM9 21h6" /></svg>
+      <h2 id="live-empty-title">{live.statusLabel}</h2>
+      <p>{live.status === 'unknown' ? 'Puedes revisar nuestros canales directamente.' : 'Mientras tanto, conoce nuestros horarios o visita nuestros canales.'}</p>
+    </section>
+  )}
+  <div class="live-platforms" aria-label="Ver en otras plataformas">
+    {live.links.youtube && <a class="live-platform-youtube" href={live.links.youtube} target="_blank" rel="noopener noreferrer" aria-label="Abrir en YouTube (abre en una pestaña nueva)">
+      <svg class="live-platform-logo" viewBox="0 0 32 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M30.7 4.2a4 4 0 0 0-2.8-2.8C25.4.7 16 .7 16 .7S6.6.7 4.1 1.4a4 4 0 0 0-2.8 2.8C.6 6.7.6 12 .6 12s0 5.3.7 7.8a4 4 0 0 0 2.8 2.8c2.5.7 11.9.7 11.9.7s9.4 0 11.9-.7a4 4 0 0 0 2.8-2.8c.7-2.5.7-7.8.7-7.8s0-5.3-.7-7.8Z"/><path fill="#fff" d="m13 7 8 5-8 5V7Z"/></svg>
+    </a>}
+    {live.links.facebook && <a class="live-platform-facebook" href={live.links.facebook} target="_blank" rel="noopener noreferrer" aria-label="Ver en Facebook (abre en una pestaña nueva)">
+      <svg class="live-platform-logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg>
+    </a>}
+  </div>
+  {live.showSchedule && <section class="live-general-schedule" aria-labelledby="live-schedule-title">
+    <p class="live-eyebrow">Nos vemos en Amistad</p>
+    <h2 id="live-schedule-title">Horarios de Amistad</h2>
+    <ul>
+      {gatherings.sunday.meetings.map(meeting => <li><span>{gatherings.sunday.day} · {meeting.name}</span><time>{meeting.time}</time></li>)}
+      {gatherings.additional.map(meeting => <li><span>{meeting.day} · {meeting.name}</span><time>{meeting.time}</time></li>)}
+    </ul>
+  </section>}
+</section>

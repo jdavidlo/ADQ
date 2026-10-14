@@ -1,0 +1,17 @@
+{
+  "status": "offline",
+  "provider": "youtube",
+  "checkedAt": null,
+  "video": {
+    "id": "U2_KymVaL5U",
+    "title": null
+  },
+  "links": {
+    "youtube": "https://www.youtube.com/@AmistadDeQueretaro/streams",
+    "facebook": "https://www.facebook.com/AmistadDeQueretaroAc"
+  },
+  "broadcastSchedule": {
+    "timezone": "America/Mexico_City",
+    "meetings": []
+  }
+}
